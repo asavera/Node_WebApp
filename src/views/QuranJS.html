@@ -1,0 +1,570 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+    </style>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://unpkg.com/react@15.4.0/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.0/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <div id="demo">
+    </div>
+
+
+    <script type="text/babel">
+
+
+
+        class RecitationSelect extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state = {data: []}
+        }
+
+
+        getData(){
+
+        var fetchedData = [];
+        const url = 'http://staging.quran.com:3000/api/v3/options/recitations';
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+
+        fetchedData = data.recitations;
+
+        })
+        .catch(function(error) {
+        // If there is any error you will catch them here
+        });
+
+        setTimeout(() => {this.setState({data: fetchedData}) }, 1000)
+        }
+
+        componentDidMount(){
+        if(this.state.data.length<1) this.getData();
+        }
+
+        render(){
+        return (
+        <div className="form-group">
+        <label htmlFor="surah" className="col-form-label thick">Recitation</label>
+        <div className="">
+        <select className="form-control" id="recitationID" selected value={this.props.selectedRecitationID}
+        onChange={event => {this.props.recitationHandler(event.target.value)}} >
+        {this.state.data.map(item => <option value={item["id"]}> {item["reciter_name_eng"]} - {item["style"]}</option>)}
+        </select>
+        </div>
+        </div>
+        )
+        }
+
+        }
+
+
+        class TafsirSelect extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state = {data: []}
+        }
+
+
+        getData(){
+
+        var fetchedData = [];
+        const url = 'http://staging.quran.com:3000/api/v3/options/tafsirs';
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+
+        fetchedData = data.tafsirs;
+        
+        })
+        .catch(function(error) {
+        // If there is any error you will catch them here
+        });
+
+        setTimeout(() => {this.setState({data: fetchedData}) }, 1000)
+        }
+
+        componentDidMount(){
+        if(this.state.data.length
+        <1) this.getData();
+        }
+        render(){
+        return (
+        <div className="form-group">
+        <label htmlFor="surah" className="col-form-label thick">Tafsir</label>
+        <div className="">
+        <select className="form-control" id="tafsirID" selected value={this.props.selectedTafsirID}
+        onChange={event => {this.props.tafsirHandler(event.target.value)}} >
+        {this.state.data.map(item => <option key={item["id"]} value={item["name"]}> {item["name"]}</option>)}
+        </select>
+        </div>
+        </div>
+        )
+        }
+
+        }
+
+        class TranslationSelect extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state = {data: []}
+        }
+
+
+        getData(){
+
+        var fetchedData = [];
+        const url = 'http://staging.quran.com:3000/api/v3/options/translations';
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+
+        fetchedData = data.translations;
+
+        })
+        .catch(function(error) {
+        // If there is any error you will catch them here
+        });
+
+        setTimeout(() => {this.setState({data: fetchedData}) }, 1000)
+        }
+
+        componentDidMount(){
+        if(this.state.data.length<1) this.getData();
+        }
+
+        render(){
+        return (
+        <div className="form-group">
+        <label htmlFor="surah" className="col-form-label thick">Translation</label>
+        <div className="">
+        <select className="form-control" id="translatorID" selected value={this.props.selectedTranslationID}
+        onChange={event => {
+            const result = this.state.data.filter(translation => translation["id"]== event.target.value);
+            this.props.translationHandler(event.target.value, result[0]["author_name"])
+            }} >
+        {this.state.data.map(item => <option key={item["id"]} value={item["id"]}> {item["language_name"]} - {item["author_name"]}</option>)}
+        </select>
+        </div>
+        </div>
+        )
+        }
+
+        }
+
+        class SurahSelect extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state = {data: []}
+        }
+
+        getData(){
+
+        var fetchedData = [];
+        const url = 'http://staging.quran.com:3000/api/v3/chapters';
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+
+        fetchedData = data.chapters;
+        
+        })
+        .catch(function(error) {
+        // If there is any error you will catch them here
+        });
+
+        setTimeout(() => {this.setState({data: fetchedData}) }, 1000)
+        }
+
+        componentDidMount(){
+        if(this.state.data.length <1)
+        this.getData();
+        }
+
+
+        render(){
+        return (
+        <div className="form-group">
+        <label htmlFor="surah" className="col-form-label thick">Surah</label>
+        <div className="">
+        <select className="form-control" id="surahID" name="surahName" value={this.props.selectedSurahID}
+        onChange={event => {
+        const result = this.state.data.filter(surah => surah["id"]== event.target.value);
+        this.props.selectedSurahHandler(event.target.value,result[0]["verses_count"])
+        }} >
+        {this.state.data.map(item => <option key={item["id"]} value={item["id"]} >{item["id"]} : {item["name_simple"]}     {item["name_arabic"]}</option>)}
+        </select>
+        </div>
+        </div>
+        )
+        }
+
+        }
+
+        class VerseSelect extends React.Component {
+
+        constructor(props){
+        super(props);
+        }
+
+        render(){
+        var selectList=[];
+        var verseCount = this.props.verseCount;
+        for(var i=0; i<verseCount; i++)
+        selectList.push(<option key={i} value={i+1}> {this.props.selectedSurahID} : {i+1}</option>);
+
+
+        return (
+
+        <div className="form-group">
+
+        <label htmlFor="surah" className="col-form-label thick">Go to verse</label>
+        <div>
+        <select className="form-control" id="verseID" selected value={this.props.selectedVerseID}
+        onChange={event => {this.props.selectedVerseHandler(event.target.value)}} >
+        {selectList}
+        </select>
+        </div>
+        </div>
+        )
+        }
+
+        }
+
+        // display the form elements
+        function Form(props) {
+
+        //<RecitationSelect recitationHandler={props.recitationHandler} selectedRecitationID={props.selectedRecitationID} />
+
+        return (
+        <div className="col-12">
+
+
+        <form className="row">
+            
+            <div className="col-3">
+                <SurahSelect selectedSurahHandler={props.selectedSurahHandler} selectedSurahID={props.selectedSurahID} />
+            </div>
+            <div className="col-3">
+                <VerseSelect selectedVerseHandler={props.selectedVerseHandler} selectedSurahID={props.selectedSurahID} selectedVerseID={props.selectedVerseID} verseCount={props.verseCount} />
+            </div>
+            <div className="col-3">
+                <TranslationSelect translationHandler={props.translationHandler} selectedTranslationID={props.selectedTranslationID} />
+            </div>
+            <div className="col-3">
+                <TafsirSelect tafsirHandler={props.tafsirHandler} selectedTafsirID={props.selectedTafsirID} />
+            </div>
+
+         </form>
+        </div>
+        )
+        }
+
+        class Navbar extends React.Component{
+            render()
+            {
+        return(
+            <div>
+                <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <a className="navbar-brand" href="#">Navbar</a>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div className="collapse navbar-collapse" id="navbarColor01">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item active">
+                                <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#">Features</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#">Pricing</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#">About</a>
+                            </li>
+                        </ul>
+                        <form className="form-inline my-2 my-lg-0">
+                            <input className="form-control mr-sm-2" type="text" placeholder="Search"/>
+                            <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+            );    
+            }
+        }
+        class App extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state  = {
+            verses:[], selectedSurah:1,
+            selectedSurahVerseCount:7, selectedVerse:1,
+            selectedTranslation:21, selectedTranslationName:'Sahih International ',
+            selectedRecitation:1, selectedTafsir:'المیسر'
+        }
+
+        this.selectedSurahHandler = this.selectedSurahHandler.bind(this);
+        this.selectedVerseHandler = this.selectedVerseHandler.bind(this);
+        this.translationHandler = this.translationHandler.bind(this);
+        this.recitationHandler = this.recitationHandler.bind(this);
+        this.tafsirHandler = this.tafsirHandler.bind(this);
+
+        }
+
+        tafsirHandler(value)
+        {
+        this.setState({selectedTafsir: value});
+        }
+
+        recitationHandler(value)
+        {
+        this.setState({selectedRecitation: value});
+        setTimeout(() => { this.getData(); }, 1000)
+        }
+
+        translationHandler(value,name)
+        {
+            this.setState((prevState, props) => {
+                 return {selectedTranslation:value}
+            })
+           
+            this.setState((prevState, props) => {
+                 return {selectedTranslationName:name}
+            })
+                          
+        setTimeout(() => { this.getData(); }, 1000)
+        }
+
+        selectedSurahHandler(selectedID, verseCount) {
+
+        this.setState((prevState, props) => {
+        return {selectedSurah:selectedID}
+        })
+        this.setState((prevState, props) => {
+        return {selectedSurahVerseCount:verseCount}
+        })
+
+        this.setState((prevState, props) => {
+        return {selectedVerse:1}
+        })
+
+        setTimeout(() => { this.getData(); }, 1000)
+        }
+
+        selectedVerseHandler(value)
+        {
+        this.setState((prevState, props) => {
+        return {selectedVerse:value}
+        })
+
+        setTimeout(() => { this.getData(); }, 1000)
+        }
+
+        getData(){
+
+        var fetchedData = [];
+        var url = 'http://staging.quran.com:3000/api/v3/chapters/' + this.state.selectedSurah
+        + '/verses?recitation=' + this.state.selectedRecitation + '&translations='+ this.state.selectedTranslation +'&language=en&text_type=words';
+        
+        if(this.state.selectedVerse>1)
+           url += '&offset=' + (this.state.selectedVerse-1);
+        
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+        fetchedData = data.verses;
+        
+        })
+        .catch(function(error) {
+        // If there is any error you will catch them here
+        });
+
+        setTimeout(() => {
+        this.setState({verses: fetchedData})
+        }, 1000)
+        }
+
+        componentDidMount(){
+        this.getData();
+        }
+
+        render() {
+        var ListOrVerse;
+        if (this.state.selectedVerse>1)
+            {
+               const result = this.state.verses.filter(verse => verse["verse_number"]== this.state.selectedVerse);
+               ListOrVerse = <Verse verse={result[0]} selectedTafsir={this.state.selectedTafsir} selectedTranslationName={this.state.selectedTranslationName}/>
+            }
+        else
+            {
+                ListOrVerse = <List verses={this.state.verses} selectedTafsir={this.state.selectedTafsir} selectedTranslationName={this.state.selectedTranslationName} />
+            }
+
+        return(
+        <div className="container">
+        
+            <Navbar/>   
+        <Form selectedTafsirID = {this.state.selectedTafsir} tafsirHandler={this.tafsirHandler}
+        selectedRecitationID = {this.state.selectedRecitation} recitationHandler={this.recitationHandler}
+        selectedTranslationID = {this.state.selectedTranslation} translationHandler={this.translationHandler} 
+        selectedSurahID = {this.state.selectedSurah} selectedSurahHandler={this.selectedSurahHandler}
+        selectedVerseID={this.state.selectedVerse} verseCount={this.state.selectedSurahVerseCount} selectedVerseHandler={this.selectedVerseHandler}  />
+
+            
+        {ListOrVerse}
+
+        </div>
+        )
+        }
+
+        componentDidCatch(error, info) {
+        console.error(error);
+        console.log(info);
+        }
+
+        }
+
+
+
+        // display single line item/record in the table
+        class Verse extends React.Component {
+
+        constructor(props){
+        super(props);
+        this.state  = {tafsirs: [], hidden: true};
+        
+        }
+
+        toggleShowTafsir()
+            {
+               this.setState({hidden: !this.state.hidden});
+               if(!this.state.hidden && this.state.tafsirs)     
+                 this.getData();
+            }
+
+                          getData(){
+                          
+                          var fetchedData = [];
+                          const url = 'http://staging.quran.com:3000/api/v3/chapters/'+ this.props.verse["chapter_id"] +'/verses/'+ this.props.verse["verse_number"] +'/tafsirs';
+                          fetch(url)
+                          .then((resp) => resp.json())
+                          .then(function(data) {
+            
+                          fetchedData = data.tafsirs;
+            console.log(fetchedData);
+            
+            
+                          })
+                          .catch(function(error) {
+                          // If there is any error you will catch them here
+                          });
+
+                          setTimeout(() => {
+                          this.setState({tafsirs: fetchedData})
+                          }, 500)
+                          }
+
+                
+
+        render(){
+
+        if(this.props.verse==null)
+            {
+            return null;
+            }
+       else
+            {
+              var txt = this.state.hidden ? 'Show Tafsir - ' : 'Hide Tafsir - ';
+              txt += this.props.selectedTafsir;
+              var tafsirSpan = '';
+              var t = this.props.selectedTafsir;
+             var result = this.state.tafsirs.filter(tafsir => tafsir["resource_name"] == t );
+            
+             var tafsirTxt = '';
+            if(result.length)
+            tafsirTxt = result[0]["text"];
+            else
+            tafsirTxt = 'No tafsir found';
+
+             if (this.state.hidden)
+            {
+                 tafsirSpan = <span onClick={this.toggleShowTafsir.bind(this)}>{txt}</span>
+            }
+             else{
+                 tafsirSpan = <span onClick={this.toggleShowTafsir.bind(this)}>
+                                  <p>{txt}</p>
+                               <p>{tafsirTxt}</p>
+                              </span>
+            }
+
+
+
+        return (
+        <div>
+        
+        <p><a href={this.props.verse["audio"]["url"]}>play</a>  </p>
+        <p className="text-right">{this.props.verse["verse_key"]} {this.props.verse["text_madani"]}</p>
+        <p>{this.props.selectedTranslationName}</p>
+        <p className="text-left">{this.props.verse["translations"][0]["text"]}</p>
+
+        {tafsirSpan}
+            
+        </div>
+        )
+            }
+        }
+
+        }
+
+
+
+        class List extends React.Component{
+
+        constructor(props){
+        super(props);
+        }
+
+        render() {
+        return (
+        <div className="row row-stripped">
+        
+        <table className="table table-hover">
+        <tbody>
+        { this.props.verses.map((verse) => 
+        <tr><td><Verse verse={verse} selectedTafsir={this.props.selectedTafsir} selectedTranslationName={this.props.selectedTranslationName} /></td></tr> 
+        )}
+        </tbody>
+        </table>
+        </div>
+        )
+        }
+
+        }
+
+
+        ReactDOM.render(
+        <App />,
+        document.getElementById('demo')
+        )
+
+    </script>
+</body>
+</html>
+
+
